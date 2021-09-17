@@ -1254,12 +1254,12 @@ ValidateModelConfig(
                   " has kind KIND_MODEL but specifies one or more GPUs");
         }
       } else if (group.kind() == inference::ModelInstanceGroup::KIND_GPU) {
-#if ! defined (TRITON_ENABLE_GPU) && ! defined (TRITON_ENABLE_MALI_GPU)
+#if !defined(TRITON_ENABLE_GPU) && !defined(TRITON_ENABLE_MALI_GPU)
         return Status(
             Status::Code::INVALID_ARG,
             "instance group " + group.name() + " of model " + config.name() +
                 " has kind KIND_GPU but server does not support GPUs");
-#elif defined (TRITON_ENABLE_GPU)
+#elif defined(TRITON_ENABLE_GPU)
         if (group.gpus().size() == 0) {
           if (supported_gpus.size() == 0) {
             return Status(
@@ -1565,6 +1565,7 @@ ValidateModelConfigInt64()
       "ModelConfig::dynamic_batching::priority_queue_policy::value::default_"
       "timeout_microseconds",
       "ModelConfig::sequence_batching::direct::max_queue_delay_microseconds",
+      "ModelConfig::sequence_batching::state::dims",
       "ModelConfig::sequence_batching::oldest::max_queue_delay_microseconds",
       "ModelConfig::sequence_batching::max_sequence_idle_microseconds",
       "ModelConfig::ensemble_scheduling::step::model_version",
@@ -1786,6 +1787,10 @@ ModelConfigToJson(
       if (sb.Find("direct", &direct)) {
         RETURN_IF_ERROR(
             FixInt(config_json, direct, "max_queue_delay_microseconds"));
+      }
+      triton::common::TritonJson::Value state;
+      if (sb.Find("state", &state)) {
+        RETURN_IF_ERROR(FixInt(config_json, state, "dims"));
       }
     }
   }

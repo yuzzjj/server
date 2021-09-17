@@ -65,6 +65,12 @@ class SequenceBatchScheduler : public Scheduler {
   // \see Scheduler::Enqueue()
   Status Enqueue(std::unique_ptr<InferenceRequest>& request) override;
 
+  struct TritonMemory {
+    void *buffer_;
+    TRITONSERVER_MemoryType memory_type_;
+    int64_t memory_type_id_;
+  };
+
   // A batcher-sequence_slot combination. The batcher is represented
   // by the index into 'batchers_'.
   struct BatcherSequenceSlot {
@@ -73,7 +79,10 @@ class SequenceBatchScheduler : public Scheduler {
     BatcherSequenceSlot(size_t b, uint32_t s) : batcher_idx_(b), seq_slot_(s) {}
     size_t batcher_idx_;
     uint32_t seq_slot_;
+    std::unordered_map<std::string, TritonMemory> states_;
+    bool is_ready_for_state_update_;
   };
+
 
   // Fill a sequence slot with a sequence from the backlog or show
   // that the sequence slot is no longer being used.
@@ -125,6 +134,17 @@ class SequenceBatchScheduler : public Scheduler {
   using BatcherSequenceSlotMap =
       std::unordered_map<uint64_t, BatcherSequenceSlot>;
   BatcherSequenceSlotMap sequence_to_batcherseqslot_map_;
+
+  // Map from a request's correlation ID to the backlog queue
+  // for the requests waiting for the state update.
+  using SequenceStateBacklogMap = std::unordered_map<
+      uint64_t, std::shared_ptr<std::deque<std::unique_ptr<InferenceRequest>>>>;
+  SequenceStateBacklogMap  sequence_to_backlog_state_map_;
+  std::mutex sequence_backlog_state_mu_;
+
+  // Cached value indicating whether the model configuration
+  // requires storing the implicit state.
+  bool has_implicit_state_;
 
   // Map from a request's correlation ID to the backlog queue
   // collecting requests for that correlation ID.

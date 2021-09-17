@@ -64,6 +64,14 @@ SequenceBatchScheduler::Create(
   // Max sequence idle...
   sched->max_sequence_idle_microseconds_ =
       config.sequence_batching().max_sequence_idle_microseconds();
+  
+  // Implicit state
+  auto state = config.sequence_batching().state();
+  if (state.size() > 0) {
+    sched->has_implicit_state_ = true;
+  } else {
+    sched->has_implicit_state_ = false;
+  }
 
   // Get the number of candidate sequence slots to allow for each
   // runner. This is at least 1 even if the model doesn't support
