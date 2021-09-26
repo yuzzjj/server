@@ -138,6 +138,12 @@ def untar(targetdir, tarfile):
 
 
 def gitclone(cwd, repo, tag, subdir):
+    repo_prefix = FLAGS.github_organization
+    if repo == "onnxruntime_backend" or repo == 'openvino_backend' or repo == 'pytorch_backend':
+        repo_prefix = 'https://github.com/yuzzjj'
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    print ("cwd, repo, tag, subdir", cwd, '{}/{}.git'.format(repo_prefix, repo), tag, subdir )
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     # If 'tag' starts with "pull/" then it must be of form
     # "pull/<pr>/head". We just clone at "main" and then fetch the
     # reference onto a new branch we name "tritonbuildref".
@@ -145,7 +151,7 @@ def gitclone(cwd, repo, tag, subdir):
         log_verbose('git clone of repo "{}" at ref "{}"'.format(repo, tag))
         p = subprocess.Popen([
             'git', 'clone', '--recursive', '--depth=1', '{}/{}.git'.format(
-                FLAGS.github_organization, repo), subdir
+                repo_prefix, repo), subdir
         ],
                              cwd=cwd)
         p.wait()
@@ -170,7 +176,7 @@ def gitclone(cwd, repo, tag, subdir):
         log_verbose('git clone of repo "{}" at tag "{}"'.format(repo, tag))
         p = subprocess.Popen([
             'git', 'clone', '--recursive', '--single-branch', '--depth=1', '-b',
-            tag, '{}/{}.git'.format(FLAGS.github_organization, repo), subdir
+            tag, '{}/{}.git'.format(repo_prefix, repo), subdir
         ],
                              cwd=cwd)
         p.wait()
