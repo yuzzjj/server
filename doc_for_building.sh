@@ -23,6 +23,7 @@ https://www.feiyiblog.com/2021/01/13/%E5%85%B3%E4%BA%8Edocker-pull%E4%BD%BF%E7%9
 
 
 pytorch  手动编译
-cmake -DTRITON_PYTORCH_DOCKER_IMAGE=nvcr.io/nvidia/pytorch:21.06-py3  -DTRITON_PYTORCH_INCLUDE_PATHS="/data/yuzhenjiang/triton/workspace_server/building/pytorch/build/include/torch;/data/yuzhenjiang/triton/workspace_server/building/pytorch/build/include/torchvision" -DTRITON_PYTORCH_LIB_PATHS=/data/yuzhenjiang/triton/workspace_server/building/pytorch/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/data/yuzhenjiang/triton/workspace_server/building/pytorch/install -DTRITON_COMMON_REPO_TAG:STRING=r21.06 -DTRITON_CORE_REPO_TAG:STRING=r21.06 -DTRITON_BACKEND_REPO_TAG:STRING=r21.06 -DTRITON_ENABLE_GPU:BOOL=ON ../
+cd /data/yuzhenjiang/triton/workspace_server/building/pytorch/build/ && cmake -DTRITON_PYTORCH_DOCKER_IMAGE=nvcr.io/nvidia/pytorch:21.06-py3  -DTRITON_PYTORCH_INCLUDE_PATHS="/data/yuzhenjiang/triton/workspace_server/building/pytorch/build/include/torch;/data/yuzhenjiang/triton/workspace_server/building/pytorch/build/include/torchvision" -DTRITON_PYTORCH_LIB_PATHS=/data/yuzhenjiang/triton/workspace_server/building/pytorch/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/data/yuzhenjiang/triton/workspace_server/building/pytorch/install -DTRITON_COMMON_REPO_TAG:STRING=r21.06 -DTRITON_CORE_REPO_TAG:STRING=r21.06 -DTRITON_BACKEND_REPO_TAG:STRING=r21.06 -DTRITON_ENABLE_GPU:BOOL=ON ../
+make install
 
 
