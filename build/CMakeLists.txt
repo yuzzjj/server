@@ -387,7 +387,7 @@ endif()
 #
 ExternalProject_Add(prometheus-cpp
   PREFIX prometheus-cpp
-  URL "https://github.com/jupp0r/prometheus-cpp/archive/v0.7.0.tar.gz"
+  URL "http://storage.jd.com/hdrx-dist/algopy-bak/triton_deps/prometheus-cpp-0.7.0.tar.gz"
   URL_HASH SHA256=93907d937fa7eab9605cba786123d3eba4e87e3dca8ecec93ff9eae4eef8de5a
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/prometheus-cpp/src/prometheus-cpp"
   CMAKE_CACHE_ARGS
